@@ -73,15 +73,4 @@ If you want to add personal mappings or settings without changing this repo, cre
 - This README covers the `nvim` folder in this repo; integrate it into your dotfiles as you prefer (symlink/copy).
 - The config bootstraps `lazy.nvim` from the stable branch on first run.
 
-## Further improvements (suggested)
 
-- Add a `lua/user.lua` loader so custom overrides live outside the tracked files.
-- Document plugin-specific configs in more detail (keymaps, toggle commands).
-- Add a small troubleshooting script or `Makefile` to automate backup and symlink on Windows/WSL.
-
----
-
-If you want, I can also:
-- add a `lua/user.lua` loader and example user overrides,
-- add more keymap documentation (list every mapping), or
-- generate a short GIF showing install steps.

@@ -15,23 +15,23 @@ return {
                     "clangd",
                     "pyright",
                     "gopls"
-                }
+                },
+                automatic_enable = false
             })
         end
     },
     {
         "https://github.com/neovim/nvim-lspconfig",
+        lazy = false,
         config = function()
             local lspconfig = require("lspconfig")
             local capabilities = require('cmp_nvim_lsp').default_capabilities()
-            lspconfig.lua_ls.setup({capabilities = capabilities})
-            lspconfig.ts_ls.setup({capabilities = capabilities})
-            lspconfig.clangd.setup({capabilities = capabilities})
-            lspconfig.pyright.setup({capabilities = capabilities})
-            lspconfig.gopls.setup({capabilities = capabilities})
-            vim.keymap.set('n', "K", vim.lsp.buf.hover, {})
-            vim.keymap.set('n', 'gd', vim.lsp.buf.definition, {})
-            vim.keymap.set({'n', 'v'}, '<leader>ca', vim.lsp.buf.code_action, {})
+            local on_attach = require('lsp').on_attach
+            lspconfig.lua_ls.setup({capabilities = capabilities, on_attach = on_attach})
+            lspconfig.ts_ls.setup({capabilities = capabilities, on_attach = on_attach})
+            lspconfig.clangd.setup({capabilities = capabilities, on_attach = on_attach})
+            lspconfig.pyright.setup({capabilities = capabilities, on_attach = on_attach})
+            lspconfig.gopls.setup({capabilities = capabilities, on_attach = on_attach})
         end
     }
 
