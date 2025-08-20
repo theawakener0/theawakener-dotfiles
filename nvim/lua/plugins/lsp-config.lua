@@ -1,12 +1,15 @@
 return {
     {
         "mason-org/mason.nvim",
+        lazy = false,
         config = function()
             require("mason").setup()
         end
     },
     {
         "mason-org/mason-lspconfig.nvim",
+        lazy = false,
+        dependencies = { "mason-org/mason.nvim" },
         config = function()
             require("mason-lspconfig").setup({
                 ensure_installed = {
@@ -15,14 +18,18 @@ return {
                     "clangd",
                     "pyright",
                     "gopls"
-                },
-                automatic_enable = false
+                }
             })
         end
     },
     {
         "https://github.com/neovim/nvim-lspconfig",
         lazy = false,
+        dependencies = { 
+            "mason-org/mason.nvim",
+            "mason-org/mason-lspconfig.nvim",
+            "hrsh7th/cmp-nvim-lsp"
+        },
         config = function()
             local lspconfig = require("lspconfig")
             local capabilities = require('cmp_nvim_lsp').default_capabilities()

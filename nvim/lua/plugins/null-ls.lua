@@ -1,5 +1,6 @@
 return {
     "jose-elias-alvarez/null-ls.nvim",
+    lazy = false,
     dependencies = { "nvim-lua/plenary.nvim", "neovim/nvim-lspconfig" },
     config = function()
         local ok, null_ls = pcall(require, 'null-ls')
