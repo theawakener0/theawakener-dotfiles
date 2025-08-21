@@ -1,6 +1,6 @@
 # The Awakener — Neovim Configuration
 
-Opinionated, lightweight Neovim config that uses `lazy.nvim` for plugin management and ships with a small set of commonly used plugins (treesitter, lsp, completion, telescope, neo-tree, catppuccin theme, and lualine).
+Opinionated, lightweight Neovim config that uses `lazy.nvim` for plugin management and ships with a small set of commonly used plugins (treesitter, lsp, completion, telescope, neo-tree, rose-pine theme, and lualine).
 
 This README explains how to install, use, and customize the config.
 
@@ -30,7 +30,7 @@ On native Windows (not WSL), place the `nvim` folder under `%USERPROFILE%\AppDat
 - Bootstrap: `init.lua` bootstraps `folke/lazy.nvim` and loads `lua/vim-opt.lua` and the `lua/plugins` folder.
 - Options: `lua/vim-opt.lua` sets basic editor options and leader keys.
 - Plugins (each in `lua/plugins/*.lua`):
-  - catppuccin/nvim — colorscheme
+  - rose-pine/neovim — colorscheme (transparent by default)
   - nvim-treesitter — syntax highlighting and indentation
   - nvim-lspconfig + mason — LSP servers (lua_ls, ts_ls, clangd, pyright, gopls)
   - nvim-cmp + LuaSnip — completion and snippets
@@ -66,7 +66,31 @@ If you want to add personal mappings or settings without changing this repo, cre
 
 - Plugins not installed on startup: open Neovim and run `:Lazy sync` or `:Lazy install`.
 - LSP servers missing: ensure you have `mason` installed (the config installs `mason` automatically). Open `:Mason` and install servers manually if needed.
-- Colors not applied: ensure `catppuccin` is installed (should be automatic). You can change colorscheme in `lua/plugins/colors.lua`.
+- Colors not applied: ensure `rose-pine` is installed (should be automatic). You can change colorscheme in `lua/plugins/colors.lua`.
+
+## Theme transparency
+
+This config uses `rose-pine/neovim` as the colorscheme with the "main" dark variant. Transparency is enabled by default, but you can control it by setting a global variable before the colorscheme loads.
+
+To disable transparency (solid background):
+
+- In `init.lua` before `require('lazy').setup(...)`:
+
+```lua
+vim.g.theawakener_transparent = false
+```
+
+- Or in your `lua/user.lua` (recommended for per-machine overrides). Example `lua/user.lua`:
+
+```lua
+-- lua/user.lua
+vim.g.theawakener_transparent = false  -- for solid background
+-- vim.g.theawakener_transparent = true   -- for transparent background (default)
+```
+
+The colorscheme is configured to read `vim.g.theawakener_transparent`, and by default uses transparency. When transparency is enabled, backgrounds are set to "none" and some UI elements have reduced opacity for a clean, blended look.
+
+If you prefer a different rose-pine variant (main/moon/dawn), you can change the `variant` setting in `lua/plugins/colors.lua` or override it in `lua/user.lua`.
 
 ## Notes & assumptions
 
