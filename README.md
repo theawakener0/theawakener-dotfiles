@@ -1,100 +1,105 @@
 # The Awakener — Neovim Configuration
 
-Opinionated, lightweight Neovim config that uses `lazy.nvim` for plugin management and ships with a small set of commonly used plugins (treesitter, lsp, completion, telescope, neo-tree, rose-pine theme, and lualine).
+Opinionated, lightweight Neovim config powered by `lazy.nvim`, with sensible defaults and a curated plugin set: Treesitter, LSP via Mason, completion (nvim-cmp + LuaSnip), Telescope, Neo-tree, Catppuccin theme, Lualine, Git tooling, dashboard, and utilities.
 
-This README explains how to install, use, and customize the config.
+This README shows how to install, use, and customize the config.
+
+## Requirements
+
+- Neovim 0.11+
+- Git (for plugin installs)
+- ripgrep (recommended for Telescope live_grep)
+- Optional/Language-specific tools for best results:
+  - LSPs via Mason: installs language servers, but you still need language runtimes/toolchains (Node.js for tsserver/html/cssls, Python for pyright, Go for gopls, C/C++ toolchain for clangd, etc.)
+  - Formatters/linters used by none-ls: install on your system if you want formatting/diagnostics
+    - stylua, prettier
 
 ## Quick install
 
-1. Backup your existing Neovim config (if any):
+1) Backup any existing Neovim config.
 
-   - Move or copy your current config folder (for example `~/.config/nvim`) somewhere safe.
+2) Place this repo’s `nvim` folder as your Neovim config directory:
 
-2. Clone this repo (or copy the `nvim` folder) into your Neovim config location. Example (Windows WSL/git bash):
+- Linux/macOS: `~/.config/nvim`
+- Windows (native): `%USERPROFILE%\AppData\Local\nvim` (aka `%LOCALAPPDATA%\nvim`)
+- WSL: `~/.config/nvim`
 
-```
+Examples (Git Bash/WSL):
+
+```bash
 # from your desired parent dir, e.g. ~/.config
 git clone <your-dotfiles-repo-url> theawakener-dotfiles
-# then copy or symlink this nvim folder into Neovim config path
-ln -s /path/to/theawakener-dotfiles/nvim ~/.config/nvim
+cp -r theawakener-dotfiles/nvim ~/.config/nvim
+# or create a symlink if you prefer
+ln -s ~/path/to/theawakener-dotfiles/nvim ~/.config/nvim
 ```
 
-On native Windows (not WSL), place the `nvim` folder under `%USERPROFILE%\AppData\Local\nvim` or use the environment variable `XDG_CONFIG_HOME`.
+3) Start Neovim. It will bootstrap `lazy.nvim` and install plugins on first run.
 
-3. Start Neovim. The config bootstraps `lazy.nvim` automatically and will clone required plugins on first run.
+4) Run `:Lazy` to view progress; restart Neovim once installs complete.
 
-4. After startup, run `:Lazy` to see plugin status, or restart Neovim to ensure all plugins finish installing.
+## What’s included
 
-## What this config contains
-
-- Bootstrap: `init.lua` bootstraps `folke/lazy.nvim` and loads `lua/vim-opt.lua` and the `lua/plugins` folder.
-- Options: `lua/vim-opt.lua` sets basic editor options and leader keys.
-- Plugins (each in `lua/plugins/*.lua`):
-  - rose-pine/neovim — colorscheme (transparent by default)
-  - nvim-treesitter — syntax highlighting and indentation
-  - nvim-lspconfig + mason — LSP servers (lua_ls, ts_ls, clangd, pyright, gopls)
-  - nvim-cmp + LuaSnip — completion and snippets
-  - nvim-neo-tree/neo-tree.nvim — file explorer (Ctrl-b opens it)
-  - nvim-telescope/telescope.nvim — fuzzy finder (leader+ff / leader+fg)
-  - nvim-lualine/lualine.nvim — statusline
+- Bootstrap: `init.lua` sets up `lazy.nvim`, loads `lua/vim-opt.lua` and `lua/plugins/*`.
+- Options: `lua/vim-opt.lua` sets editor basics and leaders (space / backslash).
+- Plugins (see `lua/plugins/`):
+  - Theme: `catppuccin/nvim` (flavour: mocha)
+  - UI: `goolord/alpha-nvim` (dashboard), `nvim-lualine/lualine.nvim`
+  - Files & Search: `nvim-neo-tree/neo-tree.nvim`, `nvim-telescope/telescope.nvim` + `telescope-ui-select`
+  - Syntax: `nvim-treesitter/nvim-treesitter`
+  - LSP: `neovim/nvim-lspconfig`, `williamboman/mason.nvim`, `mason-lspconfig.nvim`
+  - Completion: `hrsh7th/nvim-cmp`, `cmp-nvim-lsp`, `L3MON4D3/LuaSnip`, `cmp_luasnip`, `rafamadriz/friendly-snippets`
+  - Git: `tpope/vim-fugitive`, `lewis6991/gitsigns.nvim`
+  - Utilities: `windwp/nvim-autopairs`, `folke/which-key.nvim`, `folke/todo-comments.nvim`
+  - Formatting/Diagnostics: `nvimtools/none-ls.nvim` (stylua, prettier, rubocop, erb_lint wired)
+  - Extra: `theawakener0/TraceBack` (with Telescope integration)
 
 Files of interest:
-- `init.lua` — entrypoint that bootstraps `lazy.nvim` and loads plugin specs.
-- `lua/vim-opt.lua` — editor options and leader keys.
-- `lua/plugins/` — each file returns a plugin spec consumed by `lazy.nvim`.
+- `init.lua` — entry point and plugin bootstrap
+- `lua/vim-opt.lua` — editor options and leader keys
+- `lua/plugins/*.lua` — one file per plugin or group
 
-## Useful keymaps
+## Keymaps
 
-- <Leader>ff — find files (Telescope)
-- <Leader>fg — live grep (Telescope)
-- <C-b> — toggle/reveal Neo-tree filesystem on the left
-- K — LSP hover
-- gd — go to definition
-- <Leader>ca — code actions (normal & visual)
+- Telescope: `<Leader>ff` find files, `<Leader>fg` live grep
+- Neo-tree: `Ctrl-b` toggle/reveal left filesystem
+- LSP: `K` hover, `<Leader>gd` go to definition, `<Leader>gr` references, `<Leader>ca` code action
+- Formatting: `<Leader>gf` format buffer (via LSP/none-ls)
+- Git signs: `<Leader>gp` preview hunk, `<Leader>gt` toggle line blame
+- Which-key: press `<Leader>` to see available mappings pop up
 
-Note: `<Leader>` is set to space (` `). Local leader is `\\`.
+Note: `<Leader>` is space. Local leader is `\`.
+
+## LSP and formatting
+
+- Mason installs and manages language servers automatically (`auto_install = true`). Open `:Mason` to review/adjust.
+- Servers configured: `ts_ls`, `html`, `cssls`, `lua_ls`, `clangd`, `pyright`, `gopls`.
+- none-ls provides extra formatting/diagnostics. Ensure the underlying tools are installed on your system, e.g.:
+  - stylua (Lua) — e.g., `cargo install stylua` or use your package manager
+  - prettier (web) — `npm i -g prettier`
+  - rubocop, erb_lint (Ruby) — `gem install rubocop erb_lint`
 
 ## Customize
 
-- Add plugins: create a new file under `lua/plugins/` that returns a plugin spec (compatible with `lazy.nvim`). See existing files for examples.
-- Change options: edit `lua/vim-opt.lua` for editor settings (tabs, shiftwidth, leader, etc.).
-- Change keymaps or plugin configs: edit the relevant file in `lua/plugins/` to change the `config = function()` block.
+- Add plugins: drop a new spec into `lua/plugins/` (see existing files for pattern).
+- Change options: edit `lua/vim-opt.lua` (tabs, shiftwidth, leaders, numbers, etc.).
+- Change keymaps/config: edit the related file in `lua/plugins/` and adjust its `config` block.
+- Theme flavour: change `flavour = "mocha"` in `lua/plugins/colors.lua` to `macchiato`/`frappe`/`latte`.
 
-If you want to add personal mappings or settings without changing this repo, create a file `lua/user.lua` and `require('user')` from `init.lua` (or source it from your own config after loading this one).
+Optional per-machine overrides: you can create `lua/user.lua` and then require it from `init.lua` if you want to keep local tweaks out of version control.
 
 ## Troubleshooting
 
-- Plugins not installed on startup: open Neovim and run `:Lazy sync` or `:Lazy install`.
-- LSP servers missing: ensure you have `mason` installed (the config installs `mason` automatically). Open `:Mason` and install servers manually if needed.
-- Colors not applied: ensure `rose-pine` is installed (should be automatic). You can change colorscheme in `lua/plugins/colors.lua`.
+- Plugins didn’t install: `:Lazy sync` (or `:Lazy install`) and restart Neovim.
+- Live grep shows no results: install ripgrep and ensure it’s on your PATH.
+- Treesitter errors/missing highlight: run `:TSUpdate`; check `ensure_installed` in `lua/plugins/treesitter.lua`.
+- LSP not attaching: check `:Mason` for server status; ensure runtime/toolchain (Node/Python/Go/etc.) is installed.
+- Formatting doesn’t run: install the external tools used by none-ls (stylua/prettier/rubocop/erb_lint).
+- Windows glyphs look odd: install a Nerd Font and select it in your terminal.
 
-## Theme transparency
+## Notes
 
-This config uses `rose-pine/neovim` as the colorscheme with the "main" dark variant. Transparency is enabled by default, but you can control it by setting a global variable before the colorscheme loads.
-
-To disable transparency (solid background):
-
-- In `init.lua` before `require('lazy').setup(...)`:
-
-```lua
-vim.g.theawakener_transparent = false
-```
-
-- Or in your `lua/user.lua` (recommended for per-machine overrides). Example `lua/user.lua`:
-
-```lua
--- lua/user.lua
-vim.g.theawakener_transparent = false  -- for solid background
--- vim.g.theawakener_transparent = true   -- for transparent background (default)
-```
-
-The colorscheme is configured to read `vim.g.theawakener_transparent`, and by default uses transparency. When transparency is enabled, backgrounds are set to "none" and some UI elements have reduced opacity for a clean, blended look.
-
-If you prefer a different rose-pine variant (main/moon/dawn), you can change the `variant` setting in `lua/plugins/colors.lua` or override it in `lua/user.lua`.
-
-## Notes & assumptions
-
-- This README covers the `nvim` folder in this repo; integrate it into your dotfiles as you prefer (symlink/copy).
-- The config bootstraps `lazy.nvim` from the stable branch on first run.
+- This README covers the `nvim` folder; integrate into your dotfiles as you prefer (copy/symlink).
+- The config bootstraps `lazy.nvim` (stable) on first run.
 
 
