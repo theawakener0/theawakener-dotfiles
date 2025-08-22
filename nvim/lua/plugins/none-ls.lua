@@ -1,32 +1,17 @@
-local plugin_spec = {
-  {
-    "nvimtools/none-ls.nvim",
-    lazy = false,
-    dependencies = { "nvim-lua/plenary.nvim" },
-    config = function()
-      local ok, none_ls = pcall(require, "none-ls")
-      if not ok then
-        return
-      end
+return {
+  "nvimtools/none-ls.nvim",
+  config = function()
+    local null_ls = require("null-ls")
+    null_ls.setup({
+      sources = {
+        null_ls.builtins.formatting.stylua,
+        null_ls.builtins.formatting.prettier,
+        null_ls.builtins.diagnostics.erb_lint,
+        null_ls.builtins.diagnostics.rubocop,
+        null_ls.builtins.formatting.rubocop,
+      },
+    })
 
-      local formatting = none_ls.builtins.formatting
-      local diagnostics = none_ls.builtins.diagnostics
-      local code_actions = none_ls.builtins.code_actions
-
-      none_ls.setup({
-        debounce = 150,
-        save_after_format = false,
-        sources = {
-          formatting.prettier.with({ extra_args = { "--no-semi" } }),
-          diagnostics.eslint.with({ diagnostics_format = "#{m} [eslint]" }),
-          formatting.black.with({ extra_args = { "--fast" } }),
-          formatting.stylua,
-          formatting.gofmt,
-          code_actions.refactoring,
-        },
-      })
-    end,
-  },
+    vim.keymap.set("n", "<leader>gf", vim.lsp.buf.format, {})
+  end,
 }
-
-return plugin_spec

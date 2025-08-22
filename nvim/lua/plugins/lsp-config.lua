@@ -1,73 +1,51 @@
 return {
-    {
-        -- Official repo is now 'williamboman/mason.nvim'
-        "williamboman/mason.nvim",
-        lazy = false,
-        config = function()
-            require("mason").setup()
-        end
+  {
+    "williamboman/mason.nvim",
+    lazy = false,
+    config = function()
+      require("mason").setup()
+    end,
+  },
+  {
+    "williamboman/mason-lspconfig.nvim",
+    lazy = false,
+    opts = {
+      auto_install = true,
     },
-    {
-        -- Official companion plugin
-        "williamboman/mason-lspconfig.nvim",
-        lazy = false,
-        dependencies = { "williamboman/mason.nvim" },
-        config = function()
-            require("mason-lspconfig").setup({
-                ensure_installed = {
-                    "lua_ls",
-                    "ts_ls",
-                    "clangd",
-                    "pyright",
-                    "gopls"
-                },
-                automatic_enable = false
-            })
-        end
-    },
-    {
-        "https://github.com/neovim/nvim-lspconfig",
-        lazy = false,
-        dependencies = { 
-            "williamboman/mason.nvim",
-            "williamboman/mason-lspconfig.nvim",
-            "hrsh7th/cmp-nvim-lsp"
-        },
-        config = function()
-            local lspconfig = require("lspconfig")
-            local capabilities = require('lsp').capabilities
-            local base_on_attach = require('lsp').on_attach
+  },
+  {
+    "neovim/nvim-lspconfig",
+    lazy = false,
+    config = function()
+      local capabilities = require('cmp_nvim_lsp').default_capabilities()
 
-            local function on_attach(client, bufnr)
-                if client.name == "ts_ls" or client.name == "tsserver" or client.name == "lua_ls" then
-                    if client.server_capabilities then
-                        client.server_capabilities.documentFormattingProvider = false
-                        client.server_capabilities.documentRangeFormattingProvider = false
-                    end
-                end
-                base_on_attach(client, bufnr)
-            end
+      local lspconfig = require("lspconfig")
+      lspconfig.ts_ls.setup({
+        capabilities = capabilities
+      })
+      lspconfig.html.setup({
+        capabilities = capabilities
+      })
+      lspconfig.lua_ls.setup({
+        capabilities = capabilities
+      })
+      lspconfig.cssls.setup({
+        capabilities = capabilities
+      })
+      lspconfig.clangd.setup({
+        capabilities = capabilities
+      })
+      lspconfig.pyright.setup({
+        capabilities = capabilities
+      })
+      lspconfig.gopls.setup({
+        capabilities = capabilities
+      })
 
-            -- Lua language server settings for Neovim
-            lspconfig.lua_ls.setup({
-                capabilities = capabilities,
-                on_attach = on_attach,
-                settings = {
-                    Lua = {
-                        runtime = { version = 'LuaJIT' },
-                        diagnostics = { globals = { 'vim' } },
-                        workspace = { library = vim.api.nvim_get_runtime_file('', true) },
-                        telemetry = { enable = false },
-                    },
-                },
-            })
-
-            lspconfig.ts_ls.setup({ capabilities = capabilities, on_attach = on_attach })
-            lspconfig.clangd.setup({ capabilities = capabilities, on_attach = on_attach })
-            lspconfig.pyright.setup({ capabilities = capabilities, on_attach = on_attach })
-            lspconfig.gopls.setup({ capabilities = capabilities, on_attach = on_attach })
-        end
-    }
-
+      vim.keymap.set("n", "K", vim.lsp.buf.hover, {})
+      vim.keymap.set("n", "<leader>gd", vim.lsp.buf.definition, {})
+      vim.keymap.set("n", "<leader>gr", vim.lsp.buf.references, {})
+      vim.keymap.set("n", "<leader>ca", vim.lsp.buf.code_action, {})
+    end,
+  },
 }
-
