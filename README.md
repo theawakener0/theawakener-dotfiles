@@ -1,6 +1,11 @@
 # The Awakener — Neovim Configuration
 
-Opinionated, lightweight Neovim config powered by `lazy.nvim`, with sensible defaults and a curated plugin set: Treesitter, LSP via Mason, completion (nvim-cmp + LuaSnip), Telescope, Neo-tree, Catppuccin theme, Lualine, Git tooling, dashboard, and utilities.
+Opinionated, lightweight Neovim config powered by `lazy.nvim`, with sensible defaults and a curated plugin set.
+
+Highlights:
+- TraceBack: my own all‑in‑one time‑travel, history, and code‑context plugin with Telescope integration — see [theawakener0/TraceBack](https://github.com/theawakener0/TraceBack)
+- Harpoon (by the best and only ThePrimeagen): lightning‑fast file navigation — see [ThePrimeagen/harpoon](https://github.com/ThePrimeagen/harpoon)
+- Treesitter syntax, LSP via Mason, completion (nvim‑cmp + LuaSnip), Telescope, Catppuccin theme, Lualine, Git tooling, dashboard, and utilities
 
 This README shows how to install, use, and customize the config.
 
@@ -45,13 +50,16 @@ ln -s ~/path/to/theawakener-dotfiles/nvim ~/.config/nvim
 - Plugins (see `lua/plugins/`):
   - Theme: `catppuccin/nvim` (flavour: mocha)
   - UI: `goolord/alpha-nvim` (dashboard), `nvim-lualine/lualine.nvim`
-  - Files & Search: `nvim-neo-tree/neo-tree.nvim`, `nvim-telescope/telescope.nvim` + `telescope-ui-select`
+  - Files & Search: `nvim-telescope/telescope.nvim` + `telescope-ui-select`
   - Syntax: `nvim-treesitter/nvim-treesitter`
   - LSP: `neovim/nvim-lspconfig`, `williamboman/mason.nvim`, `mason-lspconfig.nvim`
   - Completion: `hrsh7th/nvim-cmp`, `cmp-nvim-lsp`, `L3MON4D3/LuaSnip`, `cmp_luasnip`, `rafamadriz/friendly-snippets`
   - Git: `tpope/vim-fugitive`, `lewis6991/gitsigns.nvim`
   - Utilities: `windwp/nvim-autopairs`, `folke/which-key.nvim`, `folke/todo-comments.nvim`
   - Formatting/Diagnostics: `nvimtools/none-ls.nvim` (stylua, prettier, rubocop, erb_lint wired)
+  - Navigation: `ThePrimeagen/harpoon` (harpoon2 branch)
+  - AI: `github/copilot.vim`
+  - Presence: `vyfor/cord.nvim`
   - Extra: `theawakener0/TraceBack` (with Telescope integration)
 
 Files of interest:
@@ -61,14 +69,37 @@ Files of interest:
 
 ## Keymaps
 
+- Explorer: `<Leader>e` open Ex (netrw)
 - Telescope: `<Leader>ff` find files, `<Leader>fg` live grep
-- Neo-tree: `Ctrl-b` toggle/reveal left filesystem
 - LSP: `K` hover, `<Leader>gd` go to definition, `<Leader>gr` references, `<Leader>ca` code action
 - Formatting: `<Leader>gf` format buffer (via LSP/none-ls)
 - Git signs: `<Leader>gp` preview hunk, `<Leader>gt` toggle line blame
 - Which-key: press `<Leader>` to see available mappings pop up
 
+Harpoon (ThePrimeagen):
+- `<Leader>ha` add file to list
+- `<Leader>hh` toggle quick menu
+- `<Leader>h1..h4` jump to slot 1..4
+- `<Leader>hn` / `<Leader>hp` cycle next/prev
+
+TraceBack (by me):
+- `<Leader>tt` timeline, `<Leader>th` history
+- `<Leader>tc` capture snapshot, `<Leader>tr` restore, `<Leader>tp` replay
+- `<Leader>ts` toggle security lens
+
 Note: `<Leader>` is space. Local leader is `\`.
+
+## Screenshots
+
+Below are a few screenshots of the setup in action. If they don’t render on GitHub, place your images under `assets/` with the filenames shown below.
+
+![Alpha dashboard](assets/alpha-dashboard.png)
+
+![TraceBack timeline](assets/traceback-timeline.png)
+
+![Harpoon quick menu](assets/harpoon-quick-menu.png)
+
+![Explorer (netrw)](assets/netrw-explorer.png)
 
 ## LSP and formatting
 
@@ -101,5 +132,6 @@ Optional per-machine overrides: you can create `lua/user.lua` and then require i
 
 - This README covers the `nvim` folder; integrate into your dotfiles as you prefer (copy/symlink).
 - The config bootstraps `lazy.nvim` (stable) on first run.
+- Shout‑out to ThePrimeagen for Harpoon — one of the best navigation plugins out there — and check out my TraceBack plugin for time‑travel debugging and code context.
 
 
