@@ -1,6 +1,6 @@
 return {
     "folke/todo-comments.nvim",
-    lazy = false,
+    event = "VeryLazy",
     dependencies = {"nvim-lua/plenary.nvim"},
     config = function()
         require('todo-comments').setup({})
