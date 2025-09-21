@@ -22,37 +22,30 @@ return {
 
       vim.lsp.config("ts_ls", {
         capabilities = capabilities,
-        flags = { debounce_text_changes = 300 }
       })
       
       vim.lsp.config("html", {
         capabilities = capabilities,
-        flags = { debounce_text_changes = 300 }
       })
       
       vim.lsp.config("lua_ls", {
         capabilities = capabilities,
-        flags = { debounce_text_changes = 300 }
       })
       
       vim.lsp.config("cssls", {
         capabilities = capabilities,
-        flags = { debounce_text_changes = 300 }
       })
       
       vim.lsp.config("clangd", {
         capabilities = capabilities,
-        flags = { debounce_text_changes = 300 }
       })
       
       vim.lsp.config("pyright", {
         capabilities = capabilities,
-        flags = { debounce_text_changes = 300 }
       })
       
       vim.lsp.config("gopls", {
         capabilities = capabilities,
-        flags = { debounce_text_changes = 300 }
       })
 
       -- Enable LSP servers
