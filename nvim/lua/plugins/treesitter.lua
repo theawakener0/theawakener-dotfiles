@@ -2,12 +2,10 @@ return {
 	{
 		"nvim-treesitter/nvim-treesitter",
 		branch = "master",
-		event = { "BufReadPost", "BufNewFile", "BufWritePre" },
 		build = ":TSUpdate",
 		config = function()
 			local configs = require("nvim-treesitter.configs")
 			configs.setup({
-				-- Add more common languages (adjust as needed)
 				ensure_installed = {
 					"c", "cpp", "javascript", "lua", "python" 
 				},
