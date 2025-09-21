@@ -1,5 +1,4 @@
 -- Bootstrap lazy.nvim
--- n
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
 if not (vim.uv or vim.loop).fs_stat(lazypath) then
   local lazyrepo = "https://github.com/folke/lazy.nvim.git"
@@ -7,6 +6,8 @@ if not (vim.uv or vim.loop).fs_stat(lazypath) then
 end
 vim.opt.rtp:prepend(lazypath)
 
+-- Load vim options first for faster startup
 require("vim-opt")
+
 require("lazy").setup("plugins")
 

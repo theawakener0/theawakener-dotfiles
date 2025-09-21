@@ -1,13 +1,87 @@
 # The Awakener — Neovim Configuration
 
-Opinionated, lightweight Neovim config powered by `lazy.nvim`, with sensible defaults and a curated plugin set.
+⚡ **Blazingly fast**, opinionated config, Run `:Lazy` to view progress; restart Neovim once installs complete.
 
-Highlights:
-- TraceBack: my own all‑in‑one time‑travel, history, and code‑context plugin with Telescope integration — see [theawakener0/TraceBack](https://github.com/theawakener0/TraceBack)
-- Harpoon (by the best and only ThePrimeagen): lightning‑fast file navigation — see [ThePrimeagen/harpoon](https://github.com/ThePrimeagen/harpoon)
-- Treesitter syntax, LSP via Mason, completion (nvim‑cmp + LuaSnip), Telescope, Catppuccin theme, Lualine, Git tooling, dashboard, and utilities
+## What's included
 
-This README shows how to install, use, and customize the config.
+- **Bootstrap**: `init.lua` sets up `lazy.nvim` with performance optim## Troubleshooting
+
+### General Issues
+- **Plugins didn't install**: `:Lazy sync` (or `:Lazy install`) and restart Neovim
+- **Live grep shows no results**: install ripgrep and ensure it's on your PATH
+- **Treesitter errors/missing highlight**: run `:TSUpdate`; check `ensure_installed` in `lua/plugins/treesitter.lua`
+- **Windows glyphs look odd**: install a Nerd Font and select it in your terminal
+
+### LSP Issues
+- **LSP not attaching**: Check `:Mason` for server status; ensure runtime/toolchain (Node/Python/Go/etc.) is installed
+- **Keymaps not working**: LSP keymaps only work when LSP is attached to the buffer
+- **Slow LSP responses**: The 300ms debounce is intentional for performance; adjust in `lsp-config.lua` if needed
+- **LSP servers not starting**: Ensure file types match server capabilities (`.ts/.js` for ts_ls, `.py` for pyright, etc.)
+
+### Performance Issues
+- **Slow startup despite optimizations**: Run `:Lazy profile` to see plugin load times
+- **Plugins loading when they shouldn't**: Check event triggers in plugin configs
+- **Missing functionality**: Some plugins now load on-demand; trigger events (insert mode, file operations) to activate them
+
+### Formatting Issues
+- **Formatting doesn't run**: Install the external tools used by none-ls (stylua/prettier/rubocop/erb_lint)
+- **Format on save not working**: none-ls loads on file events; ensure tools are installed and in PATH, loads `lua/vim-opt.lua` and `lua/plugins/*`
+- **Options**: `lua/vim-opt.lua` sets editor basics and leaders (space / backslash)
+- **Plugins** (see `lua/plugins/` - all optimized for lazy loading):
+  - **Theme**: `catppuccin/nvim` (flavour: mocha) - loads immediately for UI
+  - **UI**: `goolord/alpha-nvim` (dashboard), `nvim-lualine/lualine.nvim` - lazy loaded
+  - **Files & Search**: `nvim-telescope/telescope.nvim` + `telescope-ui-select` - key-triggered
+  - **Syntax**: `nvim-treesitter/nvim-treesitter` - event-driven loading
+  - **LSP**: `neovim/nvim-lspconfig`, `williamboman/mason.nvim`, `mason-lspconfig.nvim` - modern API
+  - **Completion**: `hrsh7th/nvim-cmp`, `cmp-nvim-lsp`, `L3MON4D3/LuaSnip` - insert mode only
+  - **Git**: `tpope/vim-fugitive`, `lewis6991/gitsigns.nvim` - command/event triggered
+  - **Utilities**: `windwp/nvim-autopairs`, `folke/which-key.nvim`, `folke/todo-comments.nvim` - smart loading
+  - **Formatting**: `nvimtools/none-ls.nvim` - event-driven
+  - **Navigation**: `ThePrimeagen/harpoon` (harpoon2 branch)
+  - **AI**: `github/copilot.vim`
+  - **Presence**: `vyfor/cord.nvim`
+  - **Extra**: `theawakener0/TraceBack` (with Telescope integration)owered by `lazy.nvim` with modern LSP API and performance optimizations.
+
+## 🚀 Key Features
+
+- **⚡ Ultra-fast startup**: Optimized lazy loading and modern LSP configuration
+- **🔧 Modern LSP**: Uses `vim.lsp.config()` + `vim.lsp.enable()` instead of legacy setup
+- **📦 Smart plugin loading**: Event-driven loading for maximum performance
+- **🎯 Curated plugin set**: Only essential plugins, properly optimized
+
+## 🌟 Highlights
+
+- **TraceBack**: my own all‑in‑one time‑travel, history, and code‑context plugin with Telescope integration — see [theawakener0/TraceBack](https://github.com/theawakener0/TraceBack)
+- **Harpoon** (by the best and only ThePrimeagen): lightning‑fast file navigation — see [ThePrimeagen/harpoon](https://github.com/ThePrimeagen/harpoon)
+- **Modern LSP**: Uses the latest Neovim LSP API with `LspAttach` autocmds for better performance
+- **Smart Loading**: Treesitter, completion, LSP, and utilities load only when needed
+- **Performance Optimized**: Disabled unused plugins, optimized loading order, event-driven activation
+
+## ⚡ Performance Optimizations
+
+This configuration is optimized for **blazing fast startup times**:
+
+### 🔧 Modern LSP Configuration
+- **Modern API**: Uses `vim.lsp.config()` + `vim.lsp.enable()` instead of legacy `lspconfig.setup()`
+- **LspAttach autocmds**: Keymaps are buffer-local and set only when LSP attaches
+- **Debounced text changes**: 300ms debounce for better performance
+- **Event-driven loading**: LSP loads only when opening files that need it
+
+### 📦 Smart Plugin Loading
+- **No forced loading**: Eliminated all `lazy = false` from non-essential plugins
+- **Event triggers**: Plugins load based on specific events:
+  - **Treesitter**: `BufReadPost`, `BufNewFile`, `BufWritePre`
+  - **Completion**: `InsertEnter` only
+  - **LSP**: `BufReadPre`, `BufNewFile`
+  - **Git tools**: When opening files or using Git commands
+  - **UI plugins**: `VeryLazy` (after startup is complete)
+
+### 🚀 Startup Optimizations
+- **Disabled unused plugins**: gzip, tar, zip, tutor plugins disabled
+- **Optimized loading order**: Essential configs load first
+- **Minimal initial footprint**: Only colorscheme and core options at startup
+
+**Result**: Significantly faster startup times while maintaining all functionality!
 
 ## Requirements
 
@@ -103,12 +177,33 @@ Below are a few screenshots of the setup in action. If they don’t render on Gi
 
 ## LSP and formatting
 
-- Mason installs and manages language servers automatically (`auto_install = true`). Open `:Mason` to review/adjust.
-- Servers configured: `ts_ls`, `html`, `cssls`, `lua_ls`, `clangd`, `pyright`, `gopls`.
-- none-ls provides extra formatting/diagnostics. Ensure the underlying tools are installed on your system, e.g.:
-  - stylua (Lua) — e.g., `cargo install stylua` or use your package manager
-  - prettier (web) — `npm i -g prettier`
-  - rubocop, erb_lint (Ruby) — `gem install rubocop erb_lint`
+### 🔧 Modern LSP Configuration
+- **Uses modern Neovim LSP API**: `vim.lsp.config()` + `vim.lsp.enable()` instead of legacy setup
+- **LspAttach autocmds**: Keymaps are buffer-local and only set when LSP actually attaches
+- **Performance optimized**: 300ms debounce for text changes, event-driven loading
+- **Mason integration**: Installs and manages language servers automatically (`auto_install = true`)
+
+### 📋 Configured Language Servers
+- **TypeScript/JavaScript**: `ts_ls` - Node.js projects, web development
+- **HTML**: `html` - Web markup and templates  
+- **CSS**: `cssls` - Styling and preprocessors
+- **Lua**: `lua_ls` - Neovim configuration and Lua development
+- **C/C++**: `clangd` - Systems programming
+- **Python**: `pyright` - Python development
+- **Go**: `gopls` - Go development
+
+### 🛠️ Formatting & Diagnostics
+- **none-ls** provides additional formatting/diagnostics beyond LSP
+- **Configured tools**: stylua (Lua), prettier (web), rubocop + erb_lint (Ruby)
+- **Installation**: Ensure tools are installed on your system:
+  - `cargo install stylua` or use your package manager
+  - `npm i -g prettier`
+  - `gem install rubocop erb_lint`
+
+### 🎯 Usage
+- Open `:Mason` to review/manage language servers
+- LSP servers start automatically when opening supported file types
+- Use `<leader>gf` to format the current buffer
 
 ## Customize
 
