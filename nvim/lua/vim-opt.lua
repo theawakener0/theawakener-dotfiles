@@ -10,5 +10,11 @@ vim.g.maplocalleader = "\\"
 vim.opt.relativenumber = true
 vim.opt.number = true
 
-vim.keymap.set("n", "<leader>e", ":Ex<CR>", { silent = true, desc = "Explorer (Ex)" })
+vim.opt.textwidth = 0
+vim.opt.wrapmargin = 0
+vim.opt.formatoptions:remove("t")
 
+vim.opt.updatetime = 300
+
+
+vim.keymap.set("n", "<leader>e", ":Ex<CR>", { silent = true, desc = "Explorer (Ex)" })
